@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up - Online Fertilizer Portal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- TOP NAVIGATION BAR -->
+  <header class="header">
+    <nav class="nav">
+      <a href="home.html">HOME</a>
+      <a href="home.html">ABOUT</a>
+      <a href="community-page.html">COMMUNITIES</a>
+      <a href="home.html#contact">CONTACTS</a>
+    </nav>
+    <div class="header-buttons">
+      <a class="btn-help" href="home.html#contact">HELP</a>
+      <a class="btn-login" href="index.html">LOGIN</a>
+    </div>
+  </header>
+
+  <main class="main-content-area">
+    <div class="login-card">
+      <div class="text-center">
+        <div class="user-icon-holder">
+          <svg fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M12 12c2.21 0 4-1.79 4-4
+              s-1.79-4-4-4-4 1.79-4 4
+              1.79 4 4 4zm0 2
+              c-2.67 0-8 1.34-8 4v2h16v-2
+              c0-2.66-5.33-4-8-4z"
+            />
+          </svg>
+        </div>
+        <h3 class="card-title">Create an Account</h3>
+        <p class="card-subtitle">Sign up manually</p>
+      </div>
+
+
+      <!-- DIVIDER -->
+      <p class="muted" style="text-align: center; margin: 20px 0;">Or sign up manually</p>
+
+      <!-- MANUAL SIGNUP (Secondary) -->
+      <div class="input-group">
+        <input type="text" placeholder="Full Name" id="fullname" required />
+      </div>
+
+      <div class="input-group">
+        <input type="email" placeholder="Your Email" id="email" required />
+      </div>
+
+      <div class="input-group">
+        <input type="text" placeholder="Phone Number" id="phone" required />
+      </div>
+
+      <div class="input-group">
+        <input type="text" placeholder="Address" id="address" required />
+      </div>
+
+      <div class="input-group">
+        <input type="text" placeholder="Area / City" id="area" required />
+      </div>
+
+      <div class="input-group">
+        <input type="password" placeholder="Create Password" id="password" required />
+      </div>
+
+      <button class="btn-submit" id="signupBtn">SIGN UP MANUALLY</button>
+
+      <p class="muted" style="text-align: center; margin-top: 10px; font-size: 0.9rem;">
+        After signing up, please check your email for a verification link before logging in.
+      </p>
+
+      <p class="signup">
+        Already have an account? <a href="index.html">Log In</a>
+      </p>
+    </div>
+  </main>
+
+  <!-- IMPORTANT: no type="module" here -->
+  <script src="app.js"></script>
+</body>
+</html>
