@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const API = ""; // same origin
+  const API = "https://t35-creative-co-design-agent-for-product-u00t.onrender.com"; // same origin
 
   // ============================================
   // GOOGLE SIGNUP (Primary method on signup page)
@@ -173,65 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ============================================
-  // GOOGLE LOGIN (on login page)
-  // ============================================
-  const googleBtn = document.getElementById("googleBtn");
-  if (googleBtn) {
-    googleBtn.addEventListener("click", async (e) => {
-      e.preventDefault();
-
-      if (typeof google !== "undefined" && google.accounts && google.accounts.id) {
-        google.accounts.id.initialize({
-          client_id: "YOUR_GOOGLE_CLIENT_ID_HERE",
-          callback: handleGoogleSignIn,
-        });
-        google.accounts.id.renderButton(
-          document.createElement("div"),
-          { theme: "outline", size: "large" }
-        );
-        google.accounts.id.prompt((notification) => {
-          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            console.log("Google One Tap not displayed.");
-          }
-        });
-      } else {
-        alert("⚠️ Google Sign-In library not loaded.");
-      }
-    });
-
-    window.handleGoogleSignIn = async (response) => {
-      const googleToken = response.credential;
-      
-      try {
-        const payload = JSON.parse(atob(googleToken.split('.')[1]));
-        const { name, email, picture } = payload;
-
-        const res = await fetch(`${API}/api/users/google-oauth`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ googleToken, name, email, picture }),
-        });
-        const data = await res.json();
-
-        if (!res.ok) {
-          alert("❌ Google sign-in failed: " + (data.message || data.error));
-          return;
-        }
-
-        if (data.token) {
-          localStorage.setItem("authToken", data.token);
-          localStorage.setItem("loggedInUser", JSON.stringify(data.user));
-        }
-
-        alert(`✅ Signed in as ${data.user.name || data.user.email}.`);
-        window.location.href = "home.html";
-      } catch (err) {
-        console.error(err);
-        alert("❌ Network error during Google sign-in.");
-      }
-    };
-  }
+  
 
   // ============================================
   // LOGOUT
