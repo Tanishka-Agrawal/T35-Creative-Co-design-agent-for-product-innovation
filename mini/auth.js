@@ -2,42 +2,46 @@
 // Frontend Auth API client
 // ============================================
 
-const API = ""; // same origin (mini is served by backend)
+const API = "https://t35-creative-co-design-agent-for-product-innovation-6al89nh4d.vercel.app"; 
 
-export async function register(name, email, password, phone, address, area) {
-  const res = await fetch(`${API}/api/users/register`, {
+export async function register(name, email, password) {
+  const res = await fetch(`${API}/api/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password, phone, address, area }),
+    credentials: "include",
+    body: JSON.stringify({ name, email, password }),
   });
   return res.json();
 }
 
 export async function login(email, password) {
-  const res = await fetch(`${API}/api/users/login`, {
+  const res = await fetch(`${API}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ email, password }),
   });
   return res.json();
 }
 
-export async function googleOAuth(googleToken, name, email, picture) {
-  const res = await fetch(`${API}/api/users/google-oauth`, {
+export async function logout() {
+  const res = await fetch(`${API}/api/auth/logout`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ googleToken, name, email, picture }),
+    credentials: "include",
   });
   return res.json();
 }
 
-export async function logout() {
-  const res = await fetch(`${API}/api/users/logout`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+export async function me() {
+  const res = await fetch(`${API}/api/user/me`, {
+    method: "GET",
+    credentials: "include",
   });
+  if (!res.ok) return null;
   return res.json();
 }
+
 
 export function getToken() {
   return localStorage.getItem("authToken");
