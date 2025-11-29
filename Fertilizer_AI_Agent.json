@@ -1,0 +1,430 @@
+{
+  "name": "Fertilizer_AI_Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Feedback Form",
+        "formDescription": "Please give your feedback",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "placeholder": "Please enter your name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email Address",
+              "fieldType": "email",
+              "placeholder": "Please enter your valid Email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Soil Type",
+              "placeholder": "Enter you soil type (e.g. loamy, dry e.t.c)",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Crop Type",
+              "placeholder": "Enter your crop type (for e.g. Wheat, maize, bajra e.t.c)",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Contact info",
+              "fieldType": "number",
+              "placeholder": "enter your valid contact number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Ratings",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "1"
+                  },
+                  {
+                    "option": "2"
+                  },
+                  {
+                    "option": "3"
+                  },
+                  {
+                    "option": "4"
+                  },
+                  {
+                    "option": "5"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Feedback",
+              "fieldType": "textarea",
+              "placeholder": "Enter you feedback",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Location",
+              "placeholder": "Enter your location"
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -32,
+        0
+      ],
+      "id": "87053fbe-cae5-4526-9cf5-d6b288427bd8",
+      "name": "On form submission",
+      "webhookId": "4eb3be74-b4dd-440e-b45d-e4a505338536"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json['Email Address'] }}",
+        "subject": "Feeback message",
+        "message": "={{ $('On form submission').item.json['Full Name'] }} has given rating {{ $('On form submission').item.json.Ratings }} and the feedback message is {{ $('On form submission').item.json.Feedback }} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        928,
+        960
+      ],
+      "id": "bad3ae10-99d6-4a34-b6b8-e56a1ba29b48",
+      "name": "Send a message",
+      "webhookId": "72cc6f10-2e39-4bbd-a212-75d6f39fdb37",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gaNeihkVVWcyI8Nm",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        304
+      ],
+      "id": "b8f30e23-4d72-43c4-bf3a-6d8860debcf2",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        160,
+        240
+      ],
+      "id": "5d1f0582-8bdc-4faf-9513-ceb01d257c54",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pUtxP3trEQlwsEP0",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"feedback_analysis\": \"Short summary of the farmer feedback situation\",\n  \"solutions\": [\n    \"Eco-friendly solution 1\",\n    \"Eco-friendly solution 2\",\n    \"Optional solution 3\"\n  ],\n  \"usefulness_score\": 4,\n  \"feasibility_score\": 3,\n  \"fertilizer_plan\": {\n    \"recommended_fertilizers\": [\"Urea (50 kg/acre)\", \"DAP (45 kg/acre)\"],\n    \"eco_friendly_options\": [\"Compost (2500 kg/acre)\", \"Biofertilizer (3 kg/acre)\"],\n    \"available_stock_match\": [\"Urea\", \"DAP\", \"Compost\", \"Biofertilizer\"]\n  }\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        560,
+        224
+      ],
+      "id": "b12cfe46-54b8-45ad-80f7-8918a791f2ac",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "=define",
+        "text": "=You are an agricultural co-design assistant AI that analyzes farmer problems and generates structured, eco-friendly fertilizer guidance.\n\nRead and understand the following input values submitted from the form:\nSoil Type: {{ $json['Soil Type'] }}\nCrop Type: {{ $json['Crop Type'] }}\nFarmer Feedback: {{ $json.Feedback }}\n\nYOUR task is to Analyze the farmer feedback and determine whether it indicates a positive or negative situation for the crop. Summarize the issue in one sentence. (This will be the value for \"feedback_analysis\").\n\nSuggest 2–3 creative and eco-friendly solutions to improve soil health and crop condition.\nList the short, practical descriptions of the top 2-3 solutions directly into the \"solutions\" array.\nBased on the top suggested solution, provide the scores from 1–5 for:\nusefulness_score (how effective)\nfeasibility_score (how easy for a typical farmer)\n\nBased on soil type and crop type, generate a basic fertilizer plan:\nList all recommended non-organic fertilizers (e.g., Urea, DAP, NPK) with their approximate safe quantities in the \"recommended_fertilizers\" array (e.g., \"Urea (50 kg/acre)\").\n\nList all recommended eco-friendly alternatives (e.g., Compost, Biofertilizer) with their approximate safe quantities in the \"eco_friendly_options\" array (e.g., \"Compost (2500 kg/acre)\").Match all recommended fertilizers and eco-friendly options with the following available stock categories: [\"Urea\", \"DAP\", \"NPK\", \"Compost\", \"Vermicompost\", \"Biofertilizer\"]. \n\nList only the matched categories in the \"available_stock_match\" array.OUTPUT RULES (VERY IMPORTANT)\nYou MUST return ONLY a pure JSON object.DO NOT wrap the JSON in quotes.DO NOT include backslashes.DO NOT include \\n or escape characters.DO NOT include explanations, markdown, or text outside JSON.MUST strictly follow the exact JSON structure below.REQUIRED JSON OUTPUT STRUCTURE$${\n  \"feedback\\_analysis\": \"Short summary.\",\n  \"solutions\": [\n    \"Eco-friendly solution 1\",\n    \"Eco-friendly solution 2\",\n    \"Optional solution 3\"\n  ],\n  \"usefulness\\_score\": 0,\n  \"feasibility\\_score\": 0,\n  \"fertilizer\\_plan\": {\n    \"recommended\\_fertilizers\": [\"Fertilizer A (e.g., 50 kg/acre)\", \"Fertilizer B (e.g., 45 kg/acre)\"],\n    \"eco\\_friendly\\_options\": [\"Eco option 1 (e.g., 2500 kg/acre)\", \"Eco option 2 (e.g., 3 kg/acre)\"],\n    \"available\\_stock\\_match\": [\"Stock item 1\", \"Stock item 2\"]\n  }\n}$$Return ONLY this JSON object exactly in this structure.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        352,
+        -16
+      ],
+      "id": "20a5055b-248a-4a5f-8263-3121e4b79783",
+      "name": "Fertilizer AI-AGENT"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * Since the previous AI node is now returning a pre-parsed JSON object,\n * this script simply returns the object directly without parsing or cleaning.\n */\nconst AI_OUTPUT_FIELD = 'output'; \n\n// Retrieve the pre-parsed object directly\nconst finalObject = $input.item.json[AI_OUTPUT_FIELD];\n\n// Check if the object is valid before returning\nif (!finalObject || typeof finalObject !== 'object') {\n    return [{ \n        json: { \n            error: \"Input is invalid or missing.\", \n            error_details: \"AI Agent returned non-object data.\",\n            raw_output_type: typeof finalObject \n        } \n    }];\n}\n\n// Return the already clean JSON object\nreturn [{ json: finalObject }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        704,
+        -16
+      ],
+      "id": "5f6ce25a-f61a-41a1-9682-81f461606d3b",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        880,
+        240
+      ],
+      "id": "a07eaa8f-3981-4feb-aee0-11aabf1ff896",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1rCXi2KPlXo34dT0Kl9g9ZNtNs_0zU0vIoK942SJtI6I",
+          "mode": "list",
+          "cachedResultName": "Framers Feedback Form",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1rCXi2KPlXo34dT0Kl9g9ZNtNs_0zU0vIoK942SJtI6I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1rCXi2KPlXo34dT0Kl9g9ZNtNs_0zU0vIoK942SJtI6I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json['Full Name'] }}",
+            "Email Address": "={{ $json['Email Address'] }}",
+            "Crop Type": "={{ $json['Crop Type'] }}",
+            "Contact Info": "={{ $json['Contact info'] }}",
+            "Ratings": "={{ $json.Ratings }}",
+            "Feedback": "={{ $json.Feedback }}",
+            "Soil Type": "={{ $json['Soil Type'] }}"
+          },
+          "matchingColumns": [
+            "Email Address"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Address",
+              "displayName": "Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Crop Type",
+              "displayName": "Crop Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Contact Info",
+              "displayName": "Contact Info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Soil Type",
+              "displayName": "Soil Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Ratings",
+              "displayName": "Ratings",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Feedback",
+              "displayName": "Feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -48,
+        240
+      ],
+      "id": "809a9d4e-21d5-49b1-9802-29d1944bf2e4",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "gH2Z3IgRHtLAPFVc",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "51bccd55-9e5c-4288-be13-0fba87bf8a61",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        272,
+        -208
+      ],
+      "id": "3694bd43-fa57-4edc-9b19-c2cd6f9d83f8",
+      "name": "Webhook1",
+      "webhookId": "51bccd55-9e5c-4288-be13-0fba87bf8a61"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        []
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Fertilizer AI-AGENT",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Fertilizer AI-AGENT",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Fertilizer AI-AGENT",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fertilizer AI-AGENT": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Fertilizer AI-AGENT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "db00bdf1-6886-440a-9cd8-c53bf7ae1739",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "92b8ecb6034c50fb4d55311e93a140a79701e81b183aa292dc68acd5ef6eddb3"
+  },
+  "id": "Y55h1hIrma43HcG3",
+  "tags": []
+}
