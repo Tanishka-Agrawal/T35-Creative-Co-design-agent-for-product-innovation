@@ -5,20 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up - Online Fertilizer Portal</title>
   <link rel="stylesheet" href="style.css" />
+  <script defer src="signup.js"></script>
 </head>
+
 <body>
+
   <main class="main-content-area">
     <div class="login-card">
+      
       <div class="text-center">
         <div class="user-icon-holder">
           <svg fill="currentColor" viewBox="0 0 24 24">
-            <path
-              d="M12 12c2.21 0 4-1.79 4-4
-              s-1.79-4-4-4-4 1.79-4 4
-              1.79 4 4 4zm0 2
-              c-2.67 0-8 1.34-8 4v2h16v-2
-              c0-2.66-5.33-4-8-4z"
-            />
+            <path d="M12 12c2.21 0 4-1.79 4-4
+            s-1.79-4-4-4-4 1.79-4 4
+            1.79 4 4 4zm0 2
+            c-2.67 0-8 1.34-8 4v2h16v-2
+            c0-2.66-5.33-4-8-4z"/>
           </svg>
         </div>
         <h3 class="card-title">Create an Account</h3>
@@ -44,19 +46,37 @@
         <input type="text" placeholder="Area / City" id="area" required />
       </div>
 
-      <div class="input-group">
-        <input type="password" placeholder="Create Password" id="password" required />
+      <!-- OTP FIELD -->
+      <div class="input-group" id="signupOtpGroup" style="display:none;">
+        <input type="text" placeholder="Enter OTP" id="signupOtp" maxlength="6" />
       </div>
 
-      <button class="btn-submit" id="signupBtn">SIGN UP</button>
+      <button class="btn-submit" id="signupBtn">SEND OTP</button>
+      <button class="btn-submit" id="verifySignupBtn" style="display:none;">VERIFY OTP</button>
 
       <p class="signup">
         Already have an account? <a href="index.html">Log In</a>
       </p>
+
     </div>
   </main>
+  <!-- <script type="module">
+  import { signupPageVoice, toggleVoice } from "./Home_page/voiceAssistant.js";
 
-  <!-- IMPORTANT: no type="module" here -->
-  <script src="script.js"></script>
+  signupPageVoice();
+</script> -->
+
+  <script type="module">
+  import { 
+    signupPageVoice, 
+    signupFieldInstructions, 
+    toggleVoice 
+  } from "./Home_page/voiceAssistant.js";
+
+  signupPageVoice();
+  signupFieldInstructions();
+</script>
+
+
 </body>
 </html>

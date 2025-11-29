@@ -1,0 +1,38 @@
+{
+  "name": "t35-creative-co-design-agent-for-product-innovation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tanishka-Agrawal/T35-Creative-Co-design-agent-for-product-innovation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tanishka-Agrawal/T35-Creative-Co-design-agent-for-product-innovation/issues"
+  },
+  "homepage": "https://github.com/Tanishka-Agrawal/T35-Creative-Co-design-agent-for-product-innovation#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "body-parser": "^2.2.1",
+    "compress-buffer": "^1.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "hiredis": "^0.1.17",
+    "iconv": "^2.0.6",
+    "jsonwebtoken": "^9.0.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.15.3",
+    "nodemailer": "^7.0.11",
+    "pg": "^1.1.0",
+    "stacktrace": "^1.1.0",
+    "twilio": "^5.10.6",
+    "uriparser": "^2.4.0"
+  }
+}

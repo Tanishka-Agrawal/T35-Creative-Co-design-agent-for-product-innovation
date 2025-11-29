@@ -25,14 +25,14 @@ body {
 /* Dark overlay for contrast */
 body::before {
   content: '';
-  position: fixed; /* changed from absolute to fixed */
+  position: fixed; 
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.45);
-  z-index: 0; /* stays behind everything */
-  pointer-events: none; /* ✅ critical: stops blocking clicks */
+  z-index: 0;
+  pointer-events: none; 
 }
 
 
@@ -107,7 +107,7 @@ body::before {
   padding: 20px;
   position: relative;
   z-index: 10;
-  min-height: 80vh; /* keeps form centered */
+  min-height: 80vh;
 }
 
 /* ---------------- LOGIN CARD ---------------- */

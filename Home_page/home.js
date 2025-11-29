@@ -1,26 +1,33 @@
 document.addEventListener("DOMContentLoaded", () => {
+
   const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  const token = localStorage.getItem("token");
+
+  const welcomeText = document.getElementById("welcomeText");
   const logoutBtn = document.getElementById("logoutBtn");
 
-  if (!user) {
-    alert("⚠️ Please login first!");
+  const sidebar = document.getElementById("sidebar");
+  const openSidebar = document.getElementById("openSidebar");
+  const closeSidebar = document.getElementById("closeSidebar");
+
+  if (!token || !user) {
+    alert("Please login first!");
     window.location.href = "../index.html";
     return;
   }
 
-  // Display user info
-  document.getElementById("welcomeText").textContent = `Welcome, ${user.name}! 👩‍🌾`;
-  document.getElementById("userDetails").innerHTML = `
-    <strong>Email:</strong> ${user.email} <br>
-    <strong>Phone:</strong> ${user.phone} <br>
-    <strong>Address:</strong> ${user.address} <br>
-    <strong>Area:</strong> ${user.area}
-  `;
+  // Set welcome text
+  welcomeText.textContent = `Welcome, ${user.name}! 👨‍🌾`;
 
-  // Logout handler
+  // Logout
   logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("token");
     localStorage.removeItem("loggedInUser");
     window.location.href = "../index.html";
   });
+
+  // Sidebar open/close
+  openSidebar.addEventListener("click", () => sidebar.classList.add("active"));
+  closeSidebar.addEventListener("click", () => sidebar.classList.remove("active"));
+
 });
