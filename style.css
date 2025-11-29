@@ -1,0 +1,320 @@
+/* Reset and font setup */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ---------------- BODY & BACKGROUND ---------------- */
+body {
+  background-image: url("Agriculture photo HD.png"); /* Full page background */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 16px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Dark overlay for contrast */
+body::before {
+  content: '';
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 0;
+  pointer-events: none; 
+}
+
+
+/* ---------------- HEADER ---------------- */
+.header {
+  width: 100%;
+  max-width: 1280px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  position: relative;
+  z-index: 10;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.nav a {
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.875rem;
+  margin-right: 24px;
+  transition: color 0.2s;
+}
+
+.nav a:hover {
+  color: #2b8a3e;
+}
+
+.header-buttons button {
+  padding: 6px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-help {
+  background-color: white;
+  color: #2b8a3e;
+}
+
+.btn-help:hover {
+  background-color: #f0f0f0;
+}
+
+.btn-login {
+  background-color: transparent;
+  border-color: white;
+  color: white;
+  margin-left: 12px;
+}
+
+.btn-login:hover {
+  background-color: white;
+  color: #2b8a3e;
+}
+
+/* ---------------- MAIN CONTENT ---------------- */
+.main-content-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  width: 100%;
+  max-width: 900px;
+  padding: 20px;
+  position: relative;
+  z-index: 10;
+  min-height: 80vh;
+}
+
+/* ---------------- LOGIN CARD ---------------- */
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 40px;
+  position: relative;
+  z-index: 20;
+  margin-bottom: 40px;
+}
+
+.login-card .card-title {
+  color: #2b8a3e;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+/* User Icon Holder */
+.user-icon-holder {
+  width: 60px;
+  height: 60px;
+  background-color: #2b8a3e;
+  border-radius: 50%;
+  margin: 0 auto 24px auto;
+  border: 3px solid white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-icon-holder svg {
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+/* Input Fields */
+.input-group {
+  display: flex;
+  align-items: center;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 15px;
+}
+
+.input-group svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 16px;
+  color: #94a3b8;
+  stroke-width: 2;
+}
+
+.input-group input {
+  background-color: transparent;
+  width: 100%;
+  border: none;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.input-group input:focus {
+  outline: none;
+}
+
+/* Forgot Password */
+.forgot {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.forgot a {
+  color: #2b8a3e;
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+/* Login Button */
+.btn-submit {
+  width: 100%;
+  background-color: #2b8a3e;
+  color: white;
+  padding: 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-size: 1.125rem;
+  transition: background-color 0.2s;
+  box-shadow: 0 4px 8px rgba(43, 138, 62, 0.5);
+  margin-bottom: 15px;
+}
+
+.btn-submit:hover {
+  background-color: #267636;
+}
+
+/* Divider Text */
+.muted {
+  text-align: center;
+  color: #777;
+  font-size: 0.875rem;
+  margin-bottom: 15px;
+}
+
+/* Google Button */
+.btn-google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 30;
+}
+
+.btn-google img {
+  width: 18px;
+  height: 18px;
+}
+
+/* Sign Up text */
+.signup {
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.signup a {
+  color: #2b8a3e;
+  text-decoration: none;
+}
+
+/* ---------------- RIGHT SIDE TEXT ---------------- */
+.portal-description {
+  max-width: 480px;
+  text-align: center;
+  z-index: 1;
+  pointer-events: none; /* prevents blocking clicks */
+}
+
+.portal-description h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+}
+
+.portal-description p {
+  color: white;
+  font-size: 1.125rem;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+/* ---------------- RESPONSIVE (Desktop Fix) ---------------- */
+@media (min-width: 768px) {
+  body {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .main-content-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+    width: 100%;
+    max-width: 1100px;
+    margin-top: 40px;
+  }
+
+  .login-card {
+    flex: 1;
+    margin: 0;
+    transform: none;
+  }
+
+  .portal-description {
+    flex: 1;
+    text-align: left;
+    padding: 0 20px;
+    transform: none;
+  }
+
+  .portal-description h1 {
+    font-size: 3.2rem;
+    margin-bottom: 20px;
+  }
+
+  .portal-description p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+}
