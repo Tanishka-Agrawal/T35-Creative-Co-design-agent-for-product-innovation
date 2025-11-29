@@ -1,0 +1,8 @@
+express
+cors
+dotenv
+jsonwebtoken
+bcryptjs
+nodemailer
+otp-generator
+mysql2
