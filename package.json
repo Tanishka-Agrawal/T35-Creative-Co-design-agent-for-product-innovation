@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "t35-creative-co-design-agent-for-product-innovation",
   "version": "1.0.0",
   "description": "",
@@ -34,5 +35,14 @@
     "stacktrace": "^1.1.0",
     "twilio": "^5.10.6",
     "uriparser": "^2.4.0"
+=======
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.0.0"
+>>>>>>> 64c48c87a1466002cbbd68a3dab1893fdd57433c
   }
 }
