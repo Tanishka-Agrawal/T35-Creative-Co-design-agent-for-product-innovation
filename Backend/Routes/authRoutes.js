@@ -5,75 +5,117 @@ const db = require("../db");
 const jwt = require("jsonwebtoken");
 const { generateOTP } = require("../utils/otp");
 const transporter = require("../utils/emailService");
-const auth = require("../middleware/authMiddleware");
+require("dotenv").config();
 
-const SECRET = "MY_SECRET_KEY";
+const SECRET = process.env.JWT_SECRET;
 
-/* ---------------- SEND SIGNUP OTP ---------------- */
-router.post("/send-otp", (req, res) => {
+/* ---------------------------------------
+   TEMP STORAGE
+----------------------------------------- */
+global.signupOTP = null;
+global.signupEmail = null;
+global.loginOTP = null;
+global.loginEmail = null;
+
+/* ---------------------------------------
+   SEND SIGNUP OTP
+----------------------------------------- */
+router.post("/signup/send-otp", (req, res) => {
   const { email } = req.body;
+
+  if (!email) return res.json({ message: "Email required" });
 
   const otp = generateOTP();
   global.signupOTP = otp;
   global.signupEmail = email;
 
-  transporter.sendMail({
-    from: process.env.EMAIL,
-    to: email,
-    subject: "Signup OTP",
-    text: `Your OTP is: ${otp}`,
-  });
+  transporter.sendMail(
+    {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Signup OTP",
+      text: `Your Signup OTP is: ${otp}`,
+    },
+    (err, info) => {
+      if (err) {
+        console.log("❌ Signup Email Error:", err);
+        return res.json({ message: "Email sending failed" });
+      }
 
-  res.json({ message: "OTP sent successfully" });
+      console.log("Signup OTP sent:", otp);
+      res.json({ message: "OTP sent successfully" });
+    }
+  );
 });
 
-/* ---------------- VERIFY SIGNUP OTP ---------------- */
-router.post("/verify-otp", (req, res) => {
-  const { name, email, phone, address, area, otp } = req.body;
+/* ---------------------------------------
+   VERIFY SIGNUP OTP
+----------------------------------------- */
+router.post("/signup/verify", (req, res) => {
+  const { name, email, phone, address, area, password, otp } = req.body;
 
-  if (otp !== global.signupOTP || email !== global.signupEmail) {
+  if (otp !== global.signupOTP || email !== global.signupEmail)
     return res.json({ message: "Invalid OTP" });
-  }
 
   const checkSql = "SELECT * FROM users WHERE email = ? OR phone = ?";
   db.query(checkSql, [email, phone], (err, result) => {
-    if (err) return res.status(500).json({ error: err });
+    if (err) return res.json({ message: "Database error" });
 
-    if (result.length > 0) {
+    if (result.length > 0)
       return res.json({ message: "Email or Phone already exists!" });
-    }
 
     const insertSql =
-      "INSERT INTO users (name, email, phone, address, area) VALUES (?, ?, ?, ?, ?)";
+      "INSERT INTO users (name, email, phone, address, area, password) VALUES (?, ?, ?, ?, ?, ?)";
 
-    db.query(insertSql, [name, email, phone, address, area], () => {
-      global.signupOTP = null;
-      global.signupEmail = null;
+    db.query(
+      insertSql,
+      [name, email, phone, address, area, password],
+      (err2) => {
+        if (err2) return res.json({ message: "Insert failed" });
 
-      res.json({ message: "Signup completed successfully!" });
-    });
+        global.signupOTP = null;
+        global.signupEmail = null;
+
+        res.json({ message: "Signup completed" });
+      }
+    );
   });
 });
 
-/* ---------------- SEND LOGIN OTP ---------------- */
+/* ---------------------------------------
+   SEND LOGIN OTP
+----------------------------------------- */
 router.post("/login/send-otp", (req, res) => {
   const { email } = req.body;
+
+  if (!email) return res.json({ message: "Email required" });
 
   const otp = generateOTP();
   global.loginOTP = otp;
   global.loginEmail = email;
 
-  transporter.sendMail({
-    from: process.env.EMAIL,
-    to: email,
-    subject: "Login OTP",
-    text: `Your login OTP is: ${otp}`,
-  });
+  transporter.sendMail(
+    {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Login OTP",
+      text: `Your Login OTP is: ${otp}`,
+    },
+    (err, info) => {
+      if (err) {
+        console.log("❌ Login Email Error:", err);
+        return res.json({ message: "Email sending failed" });
+      }
 
-  res.json({ message: "Login OTP sent" });
+      console.log("Login OTP sent:", otp);
+      res.json({ message: "OTP sent successfully" });
+    }
+  );
 });
 
-/* ---------------- VERIFY LOGIN OTP ---------------- */
+/* ---------------------------------------
+   VERIFY LOGIN OTP
+----------------------------------------- */
 router.post("/login/verify", (req, res) => {
   const { email, otp } = req.body;
 
@@ -82,12 +124,16 @@ router.post("/login/verify", (req, res) => {
 
   const sql = "SELECT * FROM users WHERE email = ?";
   db.query(sql, [email], (err, result) => {
+    if (err) return res.json({ message: "Database Error" });
+
     if (result.length === 0)
       return res.json({ message: "User not found" });
 
     const user = result[0];
 
-    const token = jwt.sign({ email: email }, SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ email: user.email }, SECRET, {
+      expiresIn: "1h",
+    });
 
     global.loginOTP = null;
     global.loginEmail = null;
@@ -95,20 +141,9 @@ router.post("/login/verify", (req, res) => {
     res.json({
       message: "Login successful",
       token,
-      user: {
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        address: user.address,
-        area: user.area,
-      },
+      user,
     });
   });
-});
-
-/* ---------------- PROTECTED ROUTE ---------------- */
-router.get("/home", auth, (req, res) => {
-  res.json({ message: "Welcome!", user: req.user });
 });
 
 module.exports = router;

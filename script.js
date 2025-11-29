@@ -1,83 +1,69 @@
-// ---- IMPORT VOICE FUNCTIONS ----
-import { 
-  loginPageVoice,
-  loginFieldInstructions,
-  otpSentVoice,
-  speakLoginName,
-  otpVerifiedVoice,
-  toggleVoice
-} from "./Home_page/voiceAssistant.js";
 
-// ---- VOICE ON PAGE LOAD ----
-loginPageVoice();
-loginFieldInstructions();
+console.log("LOGIN JS LOADED ✔");
 
-// ---- MUTE/UNMUTE BUTTON ----
-document.getElementById("muteVoiceBtn").addEventListener("click", toggleVoice);
+document.addEventListener("DOMContentLoaded", () => {
 
-// ---- LOGIN OTP ELEMENTS ----
-const loginEmail = document.getElementById("loginEmail");
-const loginOtpBox = document.getElementById("loginOtpBox");
-const loginOtp = document.getElementById("loginOtp");
-const sendOtpBtn = document.getElementById("sendOtpBtn");
-const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+  const loginEmail = document.getElementById("loginEmail");
+  const loginOtpBox = document.getElementById("loginOtpBox");
+  const loginOtpInput = document.getElementById("loginOtp");
 
-/* ------------------------------------------------------------------
-    SEND OTP
------------------------------------------------------------------- */
-sendOtpBtn.addEventListener("click", async () => {
+  const sendLoginOtpBtn = document.getElementById("sendOtpBtn");
+  const verifyLoginOtpBtn = document.getElementById("verifyOtpBtn");
 
-  const email = loginEmail.value.trim();
+  // ---------------- SEND LOGIN OTP ----------------
+  sendLoginOtpBtn.addEventListener("click", async () => {
 
-  if (!email) {
-    alert("Enter your email first!");
-    return;
-  }
+    if (!loginEmail.value.trim()) {
+      alert("Please enter your email!");
+      return;
+    }
 
-  const res = await fetch("http://localhost:5000/api/auth/login/send-otp", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ email })
+    const res = await fetch("http://localhost:5000/api/auth/login/send-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: loginEmail.value })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+    if (data.message.includes("OTP sent")) {
+      loginOtpBox.style.display = "block";
+      sendLoginOtpBtn.style.display = "none";
+      verifyLoginOtpBtn.style.display = "block";
+    }
   });
 
-  const data = await res.json();
-  alert(data.message);
+  // ---------------- VERIFY LOGIN OTP ----------------
+  verifyLoginOtpBtn.addEventListener("click", async () => {
 
-  if (data.message.includes("OTP sent")) {
-    otpSentVoice();  // VOICE
-    loginOtpBox.style.display = "block";
-    sendOtpBtn.style.display = "none";
-    verifyOtpBtn.style.display = "block";
-  }
-});
+    if (!loginOtpInput.value.trim()) {
+      alert("Enter OTP!");
+      return;
+    }
 
-/* ------------------------------------------------------------------
-    VERIFY OTP
------------------------------------------------------------------- */
-verifyOtpBtn.addEventListener("click", async () => {
+    const res = await fetch("http://localhost:5000/api/auth/login/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: loginEmail.value,
+        otp: loginOtpInput.value
+      })
+    });
 
-  const res = await fetch("http://localhost:5000/api/auth/login/verify", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      email: loginEmail.value,
-      otp: loginOtp.value
-    })
+    const data = await res.json();
+    alert(data.message);
+
+    if (data.message.includes("Login successful")) {
+
+      // Save user & token
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("loggedInUser", JSON.stringify(data.user));
+
+      // Go to farmer home page
+      window.location.href = "./Home_page/home.html";
+    }
   });
 
-  const data = await res.json();
-  alert(data.message);
-
-  if (data.message.includes("Login successful")) {
-
-    // 🎤 SPEAK FARMER NAME AFTER LOGIN
-    speakLoginName(data.user.name);
-
-    // SAVE LOGIN SESSION
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("loggedInUser", JSON.stringify(data.user));
-
-    // REDIRECT TO HOME
-    window.location.href = "./Home_page/home.html";
-  }
 });
+

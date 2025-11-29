@@ -1,30 +1,27 @@
 const express = require("express");
 const cors = require("cors");
-
-// Main routes file
 const routes = require("./routes");
-
-// OTP/Auth routes (inside Routes/ folder)
 const authRoutes = require("./Routes/authRoutes");
+require("dotenv").config();
+require("./db");  // connects to MySQL
 
 const app = express();
 
 app.use(
   cors({
-    origin: "http://127.0.0.1:5500", // frontend
+    origin: "http://127.0.0.1:5500",   // Live Server
     methods: ["GET", "POST"],
   })
 );
 
 app.use(express.json());
 
-// Normal API routes
+// Default API test
 app.use("/api", routes);
 
-// OTP Authentication routes
+// Authentication Routes (OTP, Login, Signup)
 app.use("/api/auth", authRoutes);
 
 app.listen(5000, () => {
   console.log("🚀 Server running on http://localhost:5000");
 });
-

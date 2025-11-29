@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,16 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Online Farm Portal - Login</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
 
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- JS MUST BE MODULE -->
-  <script type="module" src="script.js"></script>
-
-
+  <!-- JS -->
+  <script src="script.js" defer></script>
 </head>
-
 <body>
 
   <!-- TOP BAR -->
@@ -27,7 +30,7 @@
     </nav>
     <div class="header-buttons">
       <button class="btn-help">HELP</button>
-      <button class="btn-login" id="muteVoiceBtn">MUTE VOICE</button>
+      <button class="btn-login">LOGIN</button>
     </div>
   </header>
 
@@ -38,10 +41,12 @@
       <div class="text-center">
         <div class="user-icon-holder">
           <svg fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4
+            <path
+              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4
               -4 1.79-4 4 1.79 4 4 4zm0 2
               c-2.67 0-8 1.34-8 4v2h16v-2
-              c0-2.66-5.33-4-8-4z"/>
+              c0-2.66-5.33-4-8-4z"
+            />
           </svg>
         </div>
         <h3 class="card-title">Welcome, Log In</h3>
@@ -52,7 +57,7 @@
         <input type="email" placeholder="Your Email" id="loginEmail" required />
       </div>
 
-      <!-- OTP FIELD -->
+      <!-- OTP FIELD (hidden initially) -->
       <div class="input-group" id="loginOtpBox" style="display:none;">
         <input type="text" placeholder="Enter OTP" id="loginOtp" maxlength="6" />
       </div>
@@ -84,92 +89,8 @@
     </div>
 
   </main>
-  <button style="position:fixed;bottom:20px;left:20px;"
-  onclick="speechSynthesis.speak(new SpeechSynthesisUtterance('नमस्ते किसान भाई'))">
-    Test Voice
-  </button>
-
-  <!-- VOICE ASSISTANT SCRIPT -->
-  <script type="module">
-
-    import {
-      loginPageVoice,
-      loginFieldInstructions,
-      otpSentVoice,
-      speakLoginName,
-      toggleVoice
-    } from "./Home_page/voiceAssistant.js";
-
-    // Run when page loads
-    loginPageVoice();
-    loginFieldInstructions();
-
-    // Mute/Unmute button
-    document.getElementById("muteVoiceBtn").addEventListener("click", toggleVoice);
-
-    /* ------------------------- LOGIN OTP HANDLING ---------------------- */
-
-    const emailInput = document.getElementById("loginEmail");
-    const otpInput = document.getElementById("loginOtp");
-    const otpBox = document.getElementById("loginOtpBox");
-    const sendOtpBtn = document.getElementById("sendOtpBtn");
-    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
-
-    // SEND OTP
-    sendOtpBtn.addEventListener("click", async () => {
-
-      if (!emailInput.value.trim()) {
-        alert("Enter email!");
-        return;
-      }
-
-      const res = await fetch("http://localhost:5000/api/auth/login/send-otp", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ email: emailInput.value })
-      });
-
-      const data = await res.json();
-      alert(data.message);
-
-      if (data.message.includes("OTP sent")) {
-        otpSentVoice();
-        otpBox.style.display = "block";
-        sendOtpBtn.style.display = "none";
-        verifyOtpBtn.style.display = "block";
-      }
-    });
-
-    // VERIFY OTP
-    verifyOtpBtn.addEventListener("click", async () => {
-
-      const res = await fetch("http://localhost:5000/api/auth/login/verify", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-          email: emailInput.value,
-          otp: otpInput.value
-        })
-      });
-
-      const data = await res.json();
-      alert(data.message);
-
-      if (data.message.includes("Login successful")) {
-
-        // SPEAK FARMER NAME
-        speakLoginName(data.user.name);
-
-        // Save login data
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("loggedInUser", JSON.stringify(data.user));
-
-        // Redirect
-        window.location.href = "./Home_page/home.html";
-      }
-    });
-
-  </script>
-
 </body>
 </html>
+
+
+login page wala
