@@ -68,4 +68,6 @@ app.get("/profile", (req, res) => {
   }
 });
 
-app.listen(8000, () => console.log("Server running on port 8000"));
+// Use Render's PORT environment variable or fallback to 5000 for local
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, "0.0.0.0", () => console.log(`Server running on port ${PORT}`));
