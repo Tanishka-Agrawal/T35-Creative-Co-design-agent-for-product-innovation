@@ -8,144 +8,56 @@ The system leverages a Generative AI Agent (Gemini) orchestrated via n8n to tran
 
 🏗️ Architecture and Technical Stack
 
-The project utilizes a decoupled, three-tier architecture:
+The project utilizes a decoupled, three-tier architecture with the following components:
 
-Component
+Frontend (Presentation): HTML5, CSS3 (Custom), JavaScript (Fetch API).
 
-Technology
+Role: User interface, authentication simulation, form data submission, and display of structured results.
 
-Role
+Middleware : n8n (Webhook, AI Agent, Code Node, Respond to Webhook).
 
-Frontend (Presentation)
+Role: API gateway, workflow management, data processing, and real-time communication pipeline.
 
-HTML5, CSS3 (Custom), JavaScript (Fetch API)
+Intelligence (Core Logic): Gemini LLM (via API).
 
-User interface, authentication simulation, form data submission, and display of structured results.
+Role: Performs diagnostic reasoning, formulates eco-friendly solutions, and structures the output data.
 
-Middleware (Orchestration)
+Backend (Auth - Planned): Node.js/Express, SQL/MongoDB, JWT, OTP.
 
-n8n (Webhook, AI Agent, Code Node, Respond to Webhook)
-
-API gateway, workflow management, data processing, and real-time communication pipeline.
-
-Intelligence (Core Logic)
-
-Gemini LLM (via API)
-
-Performs diagnostic reasoning, formulates eco-friendly solutions, and structures the output data.
-
-Backend (Auth - Planned)
-
-Node.js/Express, SQL/MongoDB, JWT, OTP
-
-Planned system for secure user registration and login (using OTP).
+Role: Planned system for secure user registration and login (using OTP).
 
 🚀 Key Features
 
-Feature
-
-Description
-
-Value
-
 Real-Time AI Diagnostics
 
-Converts raw textual feedback into structured data, diagnosing the crop condition (e.g., Nitrogen Deficiency) instantly.
+Description: Converts raw textual feedback into structured data, diagnosing the crop condition (e.g., Nitrogen Deficiency) instantly.
 
-Bridges the gap between qualitative farmer observations and quantitative plans.
+Value: Bridges the gap between qualitative farmer observations and quantitative plans.
 
 Sustainable Focus
 
-Recommendations prioritize eco-friendly solutions (Compost, Biofertilizers, Crop Rotation) alongside necessary chemical inputs.
+Description: Recommendations prioritize eco-friendly solutions (Compost, Biofertilizers, Crop Rotation) alongside necessary chemical inputs.
 
-Promotes environmental responsibility and reduces farmer costs.
+Value: Promotes environmental responsibility and reduces farmer costs.
 
 Stock-Aware Planning
 
-AI recommendations are validated against a predefined list of available fertilizer stock, ensuring immediate feasibility.
+Description: AI recommendations are validated against a predefined list of available fertilizer stock, ensuring immediate feasibility.
 
-Reduces supply chain delays and improves center inventory visibility.
+Value: Reduces supply chain delays and improves center inventory visibility.
 
 Personalized Frontend
 
-User login simulation saves the user's name locally (localStorage) and displays a personalized welcome on the dashboard.
+Description: User login simulation saves the user's name locally (localStorage) and displays a personalized welcome on the dashboard.
 
-Enhances user experience and application engagement.
+Value: Enhances user experience and application engagement.
 
 Interactive Modal Form
 
-The complex AI Feedback Form is integrated into the homepage as a click-activated modal, allowing access from any page without navigation loss.
+Description: The complex AI Feedback Form is integrated into the homepage as a click-activated modal, allowing access from any page without navigation loss.
 
-Improves usability and application flow.
-
-⚙️ Setup and Installation
-
-1. Frontend Setup (Web Portal)
-
-Clone this repository to your local machine.
-
-Navigate to the project directory.
-
-Serve the HTML files using a local HTTP server (e.g., VS Code Live Server or Python http.server) to avoid CORS errors.
-
-URL should start with http://127.0.0.1:5500/.
-
-2. Backend (n8n Workflow) Configuration
-
-The core AI logic is contained within the n8n workflow.
-
-Start n8n: Ensure your n8n instance is running (e.g., n8n start on port 5678).
-
-Apply CORS: To prevent "Failed to fetch" errors, set the CORS variable to match your frontend server:
-
-# Example for Windows Command Prompt:
-set N8N_CORS_ALLOW_ORIGINS=[http://127.0.0.1:5500](http://127.0.0.1:5500)
-n8n start
+Value: Improves usability and application flow.
 
 
 
-Import Workflow:
 
-Open your n8n editor (http://localhost:5678).
-
-Import the fertilizer_guidance_workflow.json file found in this repository.
-
-Replace the API key in the AI Agent node with a valid Gemini API key.
-
-Activate: Toggle the workflow to Active (ON) in the n8n editor.
-
-Get Webhook URL: Copy the Production URL from the Webhook node.
-
-3. Final Frontend Link Update
-
-Open script.js.
-
-Update the WEBHOOK_URL constant with the Production URL copied in Step 2.5.
-
-const WEBHOOK_URL = 'http://localhost:5678/webhook/YOUR-UNIQUE-ID'; 
-
-
-
-📝 Usage Flow
-
-The intended flow for the user is:
-
-Access: User visits index.html (Login Page).
-
-Authentication: User logs in/signs up, which saves their name and redirects to home.html.
-
-Analysis: On the dashboard (home.html), the user clicks the prominent "Get Instant Fertilizer Plan" button (or the "Fertilizer Guide" feature box).
-
-Modal Opens: The AI Form appears as a modal overlay.
-
-Submission: User submits data. JavaScript sends the payload to n8n.
-
-Result: The clean, structured AI analysis is displayed in the #resultsDisplay area within the modal.
-
-Feedback Loop: The farmer can optionally submit a rating and comment on the plan.
-
-🤝 Contribution
-
-This project is open for contribution! Please work within a dedicated feature branch and submit a Pull Request to the main branch for review.
-
-Developed by Saumya Agarwal and Harshita Bhatia
